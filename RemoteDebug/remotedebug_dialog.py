@@ -75,6 +75,15 @@ class RemoteDebugDialog(QDialog, FORM_CLASS):
             self.unsetCursor()
 
     @pyqtSlot()
+    def on_pycharm_path_but_clicked(self):
+        pycharm_path = QFileDialog.getExistingDirectory(
+            None, "Select the directory containing pydevd-pycharm.egg",
+            self.pycharn_path_ledit.text())
+        if not pycharm_path:
+            return  # dialog canceled
+        self.pycharm_path_ledit.setText(pycharm_path)
+
+    @pyqtSlot()
     def on_exception_but_clicked(self):
         raise Exception()
 
@@ -94,4 +103,9 @@ class RemoteDebugDialog(QDialog, FORM_CLASS):
                 u"Debugging connection failed", level=1, duration=2)
 
     def _debugger_config(self):
-        return {'pydev_path': self.pydev_path_ledit.text()}
+        return {
+            'pydev_path': self.pydev_path_ledit.text(),
+            'pycharm_path': self.pycharm_path_ledit.text(),
+            'pycharm_host' : self.pycharm_host_ledit.text(),
+            'pycharm_port' : self.pycharm_port_ledit.text()
+        }

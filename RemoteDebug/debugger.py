@@ -74,6 +74,20 @@ class WinPDBClient(DebuggerClient):
         return started
 
 
+class PyCharmClient(DebuggerClient):
+
+    def start_debugging(self, config):
+        started = False
+        try:
+            sys.path.append(config['pycharm_path'])
+            import pydevd_pycharm
+            pydevd_pycharm.settrace(config['pycharm_host'], port=config['pycharm_port'], stdoutToServer=True, stderrToServer=True)
+            started = True
+        except:
+            pass
+        return started
+
+
 class Debugger:
 
     def __init__(self):
@@ -81,6 +95,7 @@ class Debugger:
         self._debuggers[0] = PyDevClient()
         self._debuggers[1] = WinPDBClient()
         self._debuggers[2] = EricClient()
+        self._debuggers[3] = PyCharmClient()
 
     def client(self, debugger_id):
         return self._debuggers[debugger_id]
